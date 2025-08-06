@@ -1,16 +1,16 @@
+import { Link } from "react-router-dom";
 import UserData from "./userData";
 
 export default function Header() {
   return (
-    <div className="bg-[#ffff00]">
+    <div className="bg-lime-500">
       <h1 className="text-[30px]">Crystal Beauty Clear</h1>
-      <p>
-        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quibusdam
-        necessitatibus iusto, similique dolor laboriosam assumenda sequi dolorum
-        velit quod? Numquam magni sunt quos nihil adipisci ut ipsam eum dolore
-        soluta.
-      </p>
-      <UserData />
+      {/* <a href="/">Home</a>
+      <a href="/login">Login</a> */}
+      {/* //link tag is very smooth.no page reload */}
+      <Link to="/">Home</Link>
+      <Link to="/login">Login</Link>
+      <Link to="/signup">Sign Up</Link>
     </div>
   );
 }
