@@ -1,56 +1,56 @@
+import axios from "axios";
+import { useState } from "react";
+import toast from "react-hot-toast";
 export default function Login() {
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-6">
-      <div className="bg-white rounded-lg shadow-md p-8 w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
-          Login Page
-        </h2>
-        <form className="space-y-4">
-          <div>
-            <label
-              htmlFor="username"
-              className="block text-gray-700 font-medium mb-1"
-            >
-              Username:
-            </label>
-            <input
-              type="text"
-              id="username"
-              name="username"
-              required
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
+  //e-mail and password are dynamically changing values
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-          <div>
-            <label
-              htmlFor="password"
-              className="block text-gray-700 font-medium mb-1"
-            >
-              Password:
-            </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              required
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
+  async function handleLogin() {
+    console.log("Email:", email);
+    console.log("Password:", password);
+    try {
+      const response = await axios.post("http://localhost:3000/users/login", {
+        email,
+        password,
+      });
+      toast.success("Login successful!");
+      console.log(response.data);
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  }
+
+  return (
+    <div className="h-screen w-full flex  items-center justify-center bg-[url('/login.jpg')] bg-center bg-cover">
+      <div className="w-[50%] h-full "></div>
+
+      <div className="w-[50%] h-full  justify-center items-center flex">
+        <div className="w-[500px] h-[600px] backdrop-blur-md rounded-[20px] shadow-xl flex flex-col justify-center items-center ">
+          <input
+            onChange={(e) => {
+              setEmail(e.target.value);
+            }}
+            value={email}
+            className="w-[300px] h-[50px] border border-[#c3efe9] rounded-[20px] my-[20px] px-[10px]"
+          />
+
+          <input
+            type="password"
+            onChange={(e) => {
+              setPassword(e.target.value);
+            }}
+            value={password}
+            className="w-[300px] h-[50px] border border-[#c3efe9] rounded-[20px] my-[20px] px-[10px]"
+          />
 
           <button
-            type="submit"
-            className="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 transition"
+            onClick={handleLogin}
+            className="w-[300px] h-[50px] border bg-[#c3efe9] text-white rounded-[20px] my-[20px]"
           >
             Login
           </button>
-        </form>
-        <p className="mt-4 text-center text-gray-600">
-          Don&apos;t have an account?{" "}
-          <a href="/register" className="text-indigo-600 hover:underline">
-            Register here
-          </a>
-        </p>
+        </div>
       </div>
     </div>
   );
