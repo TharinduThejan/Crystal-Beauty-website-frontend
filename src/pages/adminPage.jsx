@@ -1,32 +1,33 @@
 import { Link, Routes, Route } from "react-router-dom";
+import AdminProductsPage from "./admin/adminProductsPage";
 
 export default function AdminPage() {
   return (
-    <div className="bg-red-900 w-full h-screen flex ">
-      <div className="h-full w-[300px] bg-blue-900 ">
+    <div className=" w-full h-screen flex ">
+      <div className="h-full w-[300px] bg-white ">
         <Link
           to="/admin/users"
-          className="block text-white p-4 hover:bg-blue-700"
+          className="block text-black p-4 hover:bg-blue-700"
         >
           Users
         </Link>
         <Link
           to="/admin/products"
-          className="block text-white p-4 hover:bg-blue-700"
+          className="block text-black p-4 hover:bg-blue-700"
         >
           Products
         </Link>
         <Link
           to="/admin/orders"
-          className="block text-white p-4 hover:bg-blue-700"
+          className="block text-black p-4 hover:bg-blue-700"
         >
           Orders
         </Link>
       </div>
-      <div className="h-full w-[calc(100%-300px)] bg-amber-500 p-6">
+      <div className="h-full w-[calc(100%-300px)] ">
         <Routes>
           <Route path="/*">
-            <Route path="products" element={<h1>Products</h1>} />
+            <Route path="products" element={<AdminProductsPage />} />
             <Route path="users" element={<h1>Users</h1>} />
             <Route path="orders" element={<h1>Orders</h1>} />
           </Route>
