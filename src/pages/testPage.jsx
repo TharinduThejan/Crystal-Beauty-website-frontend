@@ -1,36 +1,35 @@
-import { useState } from "react";
-export default function TestPage() {
-  const [count, setCount] = useState(0);
-  // const [a, b] = useState(0);
-  // a =  relevant variable
-  // b =  function that change value in a
+import React, { useState } from "react";
+import mediaUpload from "../utils/mediaUpload";
 
+export default function TestPage() {
+  const [image, setImage] = useState(null);
+
+  function fileUpload() {
+    mediaUpload(image)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((res) => {
+        console.error("Error uploading file:", res);
+      });
+
+    // const url=await mediaUpload(image);
+  }
   return (
-    <>
-      <div className="w-full h-screen  flex justify-center items-center">
-        <div className="w-[450px] h-[450px] shadow flex justify-center items-center">
-          <button
-            onClick={() => {
-              setCount(count - 1);
-            }}
-            className="bg-blue-600 text-amber-100 font-bold text-center w-[100px] h-[40px] text-[20px] cursor-pointer"
-          >
-            -
-          </button>
-          <span className="text-[30px] font-bold text-center w-[100px] h-[40px] mx-[20px] flex justify-center items-center">
-            {count}
-          </span>
-          <button
-            onClick={() => {
-              setCount(count + 1);
-            }}
-            className="bg-blue-600 text-amber-100 font-bold text-center w-[100px] h-[40px] text-[20px] cursor-pointer"
-          >
-            +
-          </button>
-        </div>
-        {/* <h1>Test Page</h1> */}
-      </div>
-    </>
+    <div className="w-full h-screen flex flex-col justify-center items-center">
+      <input
+        type="file"
+        className="file-input file-input-bordered w-full max-w-xs"
+        onChange={(e) => {
+          setImage(e.target.files[0]);
+        }}
+      />
+      <button
+        onClick={fileUpload}
+        className="bg-green-500 btn btn-primary hover:bg-blue-700 justify-center items-center"
+      >
+        Upload
+      </button>
+    </div>
   );
 }

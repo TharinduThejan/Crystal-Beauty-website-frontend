@@ -32,3 +32,4 @@ function App() {
 }
 
 export default App;
+/*https://wygdrdwatnbwuuuwglbc.supabase.co*/
