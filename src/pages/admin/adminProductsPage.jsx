@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { sampleProducts } from "../../assets/sampleData";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState(sampleProducts);
@@ -9,19 +10,29 @@ export default function AdminProductsPage() {
     axios
       .get(import.meta.env.VITE_BACKEND_URL + "/api/products")
       .then((response) => {
+        setProducts(response.data);
         console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching products:", error);
       });
   }, []);
 
   return (
-    <div className="w-full h-full max-h-full overflow--y-scroll">
+    <div className="w-full h-full max-h-full overflow-y-scroll bg-amber-200 relative">
+      <Link
+        to="/admin/add-product"
+        className="w-15 h-15  absolute bottom-4 text-4xl text-center justify-center items-center right-4 bg-green-500 text-white px-4 py-2 rounded"
+      >
+        +
+      </Link>
       <table className="w-full ">
         <thead>
           <tr>
             <th>Product ID</th>
             <th>Name</th>
             <th>Image</th>
-            <th>Lablled Price</th>
+            <th>Labeled Price</th>
             <th>Stock</th>
             <th></th>
           </tr>
