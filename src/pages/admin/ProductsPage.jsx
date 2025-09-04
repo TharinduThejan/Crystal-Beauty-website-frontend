@@ -58,7 +58,9 @@ export default function AdminProductsPage() {
       ></Link>
       {isLoading ? ( // use if else condition in html
         <div className="flex justify-center items-center h-full">
-          <p className="text-gray-500">Loading...</p>
+          {/* <div className="w-[70px] h-[70px] border-t-[5px] rounded-full animate-spin border-green-500"></div>   :  loading ciycle in css style 1 */}
+          <div className="w-[70px] h-[70px] border-[5px] border-gray-100 border-t-blue-900  rounded-full animate-spin "></div>
+          {/*loading ciycle in css style 2 */}
         </div>
       ) : (
         <table className="w-full ">
