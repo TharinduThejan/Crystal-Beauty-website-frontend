@@ -10,6 +10,7 @@ import TestPage from "./pages/testPage.jsx";
 import { Toaster } from "react-hot-toast";
 import Register from "./pages/register.jsx";
 import ProductCard from "./components/productCard";
+import Loading from "./components/loading.jsx";
 function App() {
   return (
     <BrowserRouter>
@@ -22,6 +23,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/admin/*" element={<AdminPage />} />
           <Route path="/testing" element={<TestPage />} />
+          <Route path="/loading" element={<Loading />} />
           {/* //for all other wrong paths */}
         </Routes>
       </>
