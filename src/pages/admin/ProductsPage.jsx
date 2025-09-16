@@ -55,7 +55,9 @@ export default function AdminProductsPage() {
       <Link
         to="/admin/add-product"
         className="w-15 h-15  absolute bottom-4 text-4xl text-center justify-center items-center right-4 bg-green-500 text-white px-4 py-2 rounded"
-      ></Link>
+      >
+        +
+      </Link>
       {isLoading ? ( // use if else condition in html
         <div className="flex justify-center items-center h-full">
           {/* <div className="w-[70px] h-[70px] border-t-[5px] rounded-full animate-spin border-green-500"></div>   :  loading ciycle in css style 1 */}
