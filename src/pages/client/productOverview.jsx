@@ -6,12 +6,14 @@ import Loading from "../../components/loading";
 import ImageSlider from "../../components/imageSlider.jsx";
 import { addToCart } from "../../utils/cart.js";
 import { getCart } from "../../utils/cart.js";
+import { useNavigate } from "react-router-dom";
 
 export default function ProductOverview() {
   const params = useParams();
   const productId = params.id; // Access the dynamic segment from the URL
   const [status, setStatus] = useState("loading"); // "loading", "error", "success"
   const [product, setProduct] = useState(null);
+  const navigate = useNavigate();
   useEffect(() => {
     axios
       .get(import.meta.env.VITE_BACKEND_URL + "/api/products/" + productId)
@@ -79,12 +81,31 @@ export default function ProductOverview() {
                     addToCart(product, 1);
                     console.log("new cart");
                     console.log(getCart());
+                    toast.success("Product added to cart");
                   }}
                   className="bg-accent text-white px-4 py-3 rounded-full text-lg font-semibold hover:bg-purple-700 transition duration-300 cursor-pointer"
                 >
                   Add to Cart
                 </button>
-                <button className="bg-accent text-white px-6 py-3 rounded-full text-lg font-semibold hover:bg-gray-700 transition duration-300 ml-4 cursor-pointer">
+                <button
+                  onClick={() => {
+                    navigate("/checkout", {
+                      state: {
+                        cart: [
+                          {
+                            productId: product.productId,
+                            name: product.name,
+                            price: product.price,
+                            labeledPrice: product.labeledPrice,
+                            images: product.images[0],
+                            qty: 1,
+                          },
+                        ],
+                      },
+                    });
+                  }}
+                  className="bg-accent text-white px-6 py-3 rounded-full text-lg font-semibold hover:bg-gray-700 transition duration-300 ml-4 cursor-pointer"
+                >
                   Buy Now
                 </button>
               </div>

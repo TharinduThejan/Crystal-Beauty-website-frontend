@@ -1,34 +1,52 @@
-import { getCart } from "../../utils/cart";
 import { useState } from "react";
 import { BsFillTrashFill } from "react-icons/bs";
 import { BiPlus } from "react-icons/bi";
-import { addToCart } from "../../utils/cart";
 import { BiMinus } from "react-icons/bi";
-import { removeFromCart } from "../../utils/cart";
-import { getTotal } from "../../utils/cart";
 import { Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
-export default function CartPage() {
-  const [cart, setCart] = useState(getCart());
+export default function CheckoutPage() {
+  const location = useLocation(); // get cart from location state(using state prop of Link component in cart.jsx)
+  console.log(location.state.cart);
+  //{use useparam to get id from url
+  //const { id } = useParams();}
+  const [cart, setCart] = useState(location.state?.cart || []); // if cart is not passed in location state, set it to empty array
+  function getTotal() {
+    let total = 0;
+    cart.forEach((item) => {
+      total += item.price * item.qty;
+    });
+    return total;
+  }
+  function removeFromCart(Index) {
+    const newCart = cart.filter((item, i) => {
+      return i !== Index;
+    });
+    setCart(newCart);
+  }
+  function changeQty(Index, qty) {
+    const newQty = cart[Index].qty + qty;
+    if (newQty <= 0) {
+      removeFromCart(Index);
+    } else {
+      const newCart = [...cart];
+      newCart[Index].qty = newQty;
+      setCart(newCart);
+      // Update the cart state
+    }
+  }
 
   return (
     <div className="w-full h-full flex relative flex-col items-center justify-start p-8 gap-4 overflow-y-auto ">
       <div className="w-[400px] h-[80px] absolute top-1 right-1 bg-white flex  justify-center items-center rounded-lg shadow-md  flex-col ">
         <h2 className="text-lg font-semibold text-accent">
-          Total: {getTotal().toFixed(2)}
+          {getTotal().toFixed(2)}
         </h2>
-        <Link
-          to="/checkout"
-          state={{
-            cart: cart,
-          }}
-        >
-          <button className="bg-accent text-white px-4 py-0.5 rounded-lg">
-            Checkout
-          </button>
-        </Link>
+        <button className="bg-accent text-white px-4 py-0.5 rounded-lg">
+          placeholder
+        </button>
       </div>
-      {cart.map((item) => {
+      {cart.map((item, Index) => {
         return (
           <div
             key={item.productId}
@@ -60,8 +78,7 @@ export default function CartPage() {
               <button
                 className="text-white text-2xl rounded-xl font-bold px-4 py-2 aspect-square bg-accent hover:text-black cursor-pointer"
                 onClick={() => {
-                  addToCart(item, -1);
-                  setCart(getCart());
+                  changeQty(Index, -1);
                 }}
               >
                 <BiMinus />
@@ -72,8 +89,7 @@ export default function CartPage() {
               <button
                 className="text-white text-2xl rounded-xl font-bold px-4 py-2 aspect-square bg-accent hover:text-black cursor-pointer "
                 onClick={() => {
-                  addToCart(item, 1);
-                  setCart(getCart());
+                  changeQty(Index, 1);
                 }}
               >
                 <BiPlus />
@@ -89,8 +105,7 @@ export default function CartPage() {
             <button
               className="absolute p-2 font-bold text-xl text-red-700 right-[-40px] rounded-4xl hover:bg-red-700 hover:text-white cursor-pointer"
               onClick={() => {
-                removeFromCart(item.productId);
-                setCart(getCart());
+                removeFromCart(Index);
               }}
             >
               <BsFillTrashFill />

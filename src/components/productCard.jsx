@@ -15,7 +15,6 @@ export default function ProductCard({ product }) {
               className="h-full w-full object-cover hover:scale-105 transition-transform duration-300"
             />
           </div>
-
           {/* Product Details */}
           <div className="flex flex-col p-4 flex-grow">
             <h2 className="text-lg font-semibold text-gray-800 truncate">
@@ -34,10 +33,16 @@ export default function ProductCard({ product }) {
             <div className="flex items-center justify-between mt-3">
               <div>
                 <span className="text-lg font-bold text-green-600">
-                  ${product.price.toFixed(2)}
+                  $
+                  {typeof product.price === "number"
+                    ? product.price.toFixed(2)
+                    : Number(product.price || 0).toFixed(2)}
                 </span>
                 <p className="text-s text-gray-500 line-through">
-                  ${product.labeledPrice}
+                  $
+                  {typeof product.labeledPrice === "number"
+                    ? product.labeledPrice.toFixed(2)
+                    : Number(product.labeledPrice || 0).toFixed(2)}
                 </p>
               </div>
               {product.isAvailable && product.stock > 0 ? (
@@ -50,7 +55,6 @@ export default function ProductCard({ product }) {
                 </span>
               )}
             </div>
-
             {/* Add to Cart Button */}
             <button
               className={`mt-4 w-full flex items-center justify-center px-4 py-2 rounded-xl text-white font-medium shadow-md transition-colors duration-300 ${
