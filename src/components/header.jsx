@@ -1,6 +1,7 @@
 import { Link, Navigate } from "react-router-dom";
 import UserData from "./userData";
 import { useNavigate } from "react-router-dom";
+import { BsCart3 } from "react-icons/bs";
 
 export default function Header() {
   const navigate = useNavigate();
@@ -38,8 +39,10 @@ export default function Header() {
           Contact
         </Link>
       </nav>
-      <div className="w-[80px] bg-blue-500">
-        <UserData />
+      <div className="w-[80px] flex items-center justify-center">
+        <Link to="/cart" className="mr-4">
+          <BsCart3 />
+        </Link>
       </div>
     </header>
   );

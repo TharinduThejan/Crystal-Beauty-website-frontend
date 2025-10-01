@@ -3,6 +3,7 @@ import Header from "../components/header";
 import Product from "./client/productPage.jsx";
 import ProductOverview from "./client/productOverview.jsx";
 import CartPage from "./client/cart.jsx";
+import CheckoutPage from "./client/checkout.jsx";
 
 export default function Home() {
   return (
@@ -16,6 +17,7 @@ export default function Home() {
           <Route path="/overview/:id" element={<ProductOverview />} />
           <Route path="/contact" element={<h1>Contact Page</h1>} />
           <Route path="/cart" element={<CartPage />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/*" element={<h1>404 Not Found</h1>} />
         </Routes>
       </div>
