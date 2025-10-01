@@ -16,14 +16,14 @@ export default function EditProductPage() {
   const [labeledPrice, setLabeledPrice] = useState(
     location.state.product.labeledPrice
   );
-  const [price, setPrice] = useState(0);
-  const [stock, setStock] = useState(0);
+  const [price, setPrice] = useState(location.state.product.price);
+  const [stock, setStock] = useState(location.state.product.stock);
   const navigate = useNavigate();
 
   async function updateProduct() {
     const token = localStorage.getItem("token");
     if (!token) {
-      toast.error("You must be logged in to add a product");
+      toast.error("You must be logged in to update a product");
       return;
     }
     let imageUrls = location.state.product.images;
@@ -36,28 +36,24 @@ export default function EditProductPage() {
       if (images.length > 0) {
         imageUrls = await Promise.all(promisesArray);
       }
-      console.log(imageUrls);
-      // altNames is already an array from state
+
       const product = {
-        productId: productId,
-        name: name,
-        altNames: altNames,
-        description: description,
+        productId,
+        name,
+        altNames,
+        description,
         images: imageUrls,
-        labeledPrice: labeledPrice,
-        price: price,
-        stock: stock,
+        labeledPrice,
+        price,
+        stock,
         isAvailable: true,
       };
+
       axios
         .put(
           import.meta.env.VITE_BACKEND_URL + "/api/products/" + productId,
           product,
-          {
-            headers: {
-              Authorization: "Bearer " + token,
-            },
-          }
+          { headers: { Authorization: "Bearer " + token } }
         )
         .then(() => {
           toast.success("Product updated successfully");
@@ -73,93 +69,105 @@ export default function EditProductPage() {
   }
 
   return (
-    <div className="w-full h-full flex flex-col justify-center items-center bg-white">
-      <input
-        type="text"
-        disabled
-        placeholder="Product ID"
-        value={productId}
-        onChange={(e) => setProductId(e.target.value)}
-        className="input input-bordered w-full max-w-xs"
-      />
+    <div className="w-full h-full max-full flex items-center justify-center bg-gray-100 font-[Poppins] px-4 ">
+      <div className="bg-white shadow-lg rounded-xl w-full max-w-lg p-8">
+        <h1 className="text-2xl font-semibold text-gray-800 mb-6 text-center">
+          Edit Product
+        </h1>
 
-      <input
-        type="text"
-        placeholder="Name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        className="input input-bordered w-full max-w-xs"
-      />
+        {/* Product ID (Disabled) */}
+        <input
+          type="text"
+          disabled
+          value={productId}
+          onChange={(e) => setProductId(e.target.value)}
+          className="w-full border border-gray-300 bg-gray-100 text-gray-500 rounded-lg px-4 py-2 mb-4 cursor-not-allowed"
+        />
 
-      <input
-        type="text"
-        placeholder="Alternative Names (comma separated)"
-        value={altNames.join(",")}
-        onChange={(e) => setAltNames(e.target.value.split(","))}
-        className="input input-bordered w-full max-w-xs"
-      />
+        {/* Name */}
+        <input
+          type="text"
+          placeholder="Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className="w-full border border-gray-300 rounded-lg px-4 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
 
-      <textarea
-        placeholder="Description"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-        className="textarea textarea-bordered w-full max-w-xs"
-      />
+        {/* Alternative Names */}
+        <input
+          type="text"
+          placeholder="Alternative Names (comma separated)"
+          value={altNames.join(",")}
+          onChange={(e) => setAltNames(e.target.value.split(","))}
+          className="w-full border border-gray-300 rounded-lg px-4 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
 
-      <input
-        type="file"
-        placeholder="Image URLs (comma separated)"
-        onChange={(e) => {
-          setImages(e.target.files);
-        }}
-        multiple
-        className="input input-bordered w-full max-w-xs"
-      />
-      {images && images.length > 0 && (
-        <div className="mt-2 text-sm text-gray-700">
-          Selected files:{" "}
-          {Array.from(images)
-            .map((file) => file.name)
-            .join(", ")}
+        {/* Description */}
+        <textarea
+          placeholder="Description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          className="w-full border border-gray-300 rounded-lg px-4 py-2 mb-4 h-28 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+
+        {/* File Upload */}
+        <input
+          type="file"
+          onChange={(e) => setImages(e.target.files)}
+          multiple
+          className="w-full border border-gray-300 rounded-lg px-4 py-2 mb-2 cursor-pointer file:mr-3 file:py-1 file:px-3 file:border-0 file:bg-blue-500 file:text-white file:rounded-lg hover:file:bg-blue-600"
+        />
+        {images && images.length > 0 && (
+          <div className="mt-2 text-sm text-gray-600">
+            Selected files:{" "}
+            {Array.from(images)
+              .map((file) => file.name)
+              .join(", ")}
+          </div>
+        )}
+
+        {/* Labeled Price */}
+        <input
+          type="number"
+          placeholder="Labeled Price"
+          value={labeledPrice}
+          onChange={(e) => setLabeledPrice(Number(e.target.value))}
+          className="w-full border border-gray-300 rounded-lg px-4 py-2 mt-4 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+
+        {/* Price */}
+        <input
+          type="number"
+          placeholder="Price"
+          value={price}
+          onChange={(e) => setPrice(Number(e.target.value))}
+          className="w-full border border-gray-300 rounded-lg px-4 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+
+        {/* Stock */}
+        <input
+          type="number"
+          placeholder="Stock"
+          value={stock}
+          onChange={(e) => setStock(Number(e.target.value))}
+          className="w-full border border-gray-300 rounded-lg px-4 py-2 mb-6 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+
+        {/* Buttons */}
+        <div className="flex justify-between items-center">
+          <button
+            onClick={updateProduct}
+            className="w-1/2 bg-blue-600 hover:bg-blue-700 transition-all duration-200 text-white py-2 px-4 rounded-lg font-medium mr-2"
+          >
+            Update Product
+          </button>
+          <Link
+            to="/admin/products"
+            className="w-1/2 text-center bg-red-500 hover:bg-red-600 transition-all duration-200 text-white py-2 px-4 rounded-lg font-medium ml-2"
+          >
+            Cancel
+          </Link>
         </div>
-      )}
-
-      <input
-        type="text"
-        placeholder="Labeled Price"
-        value={labeledPrice}
-        onChange={(e) => setLabeledPrice(Number(e.target.value))}
-        className="input input-bordered w-full max-w-xs"
-      />
-
-      <input
-        type="text"
-        placeholder="Price"
-        value={price}
-        onChange={(e) => setPrice(Number(e.target.value))}
-        className="input input-bordered w-full max-w-xs"
-      />
-
-      <input
-        type="text"
-        placeholder="Stock"
-        value={stock}
-        onChange={(e) => setStock(Number(e.target.value))}
-        className="input input-bordered w-full max-w-xs"
-      />
-      <div className="flex flex-row w-full justify-center items-center mt-4">
-        <button
-          onClick={updateProduct}
-          className="btn btn-primary bg-green-500 hover:bg-green-700 text-white px-4 py-2 rounded"
-        >
-          Update Product
-        </button>
-        <Link
-          to="/admin/products"
-          className="btn btn-secondary bg-red-500 hover:bg-red-700 text-white px-4 py-2 rounded ml-2"
-        >
-          Cancel
-        </Link>
       </div>
     </div>
   );

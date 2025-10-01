@@ -4,13 +4,18 @@ import { BiPlus } from "react-icons/bi";
 import { BiMinus } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-
+import Product from "../../../../Crystal-Beauty-website-Backend/models/product";
+import axios from "axios";
+import { toast } from "react-hot-toast";
 export default function CheckoutPage() {
   const location = useLocation(); // get cart from location state(using state prop of Link component in cart.jsx)
   console.log(location.state.cart);
   //{use useparam to get id from url
   //const { id } = useParams();}
   const [cart, setCart] = useState(location.state?.cart || []); // if cart is not passed in location state, set it to empty array
+  const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
+
   function getTotal() {
     let total = 0;
     cart.forEach((item) => {
@@ -35,15 +40,70 @@ export default function CheckoutPage() {
       // Update the cart state
     }
   }
+  async function placeOrder() {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Please login to place order");
+      return;
+    }
+    const orderInformation = {
+      products: [],
+      phone: phone,
+      address: address,
+    };
+    for (let i = 0; i < cart.length; i++) {
+      const item = {
+        productId: cart[i].productId,
+        qty: cart[i].qty,
+      };
+      orderInformation.products[i] = item;
+    }
+    try {
+      const res = await axios.post(
+        import.meta.env.VITE_BACKEND_URL + "/api/orders",
+        orderInformation,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      toast.success("Order placed successfully");
+      console.log(res.data);
+
+      // You can handle the response here if needed
+    } catch (err) {
+      console.log(err);
+      toast.error("Failed to place order");
+      return;
+    }
+  }
 
   return (
     <div className="w-full h-full flex relative flex-col items-center justify-start p-8 gap-4 overflow-y-auto ">
-      <div className="w-[400px] h-[80px] absolute top-1 right-1 bg-white flex  justify-center items-center rounded-lg shadow-md  flex-col ">
+      <div className="w-[400px]  absolute top-5 right-2 bg-white flex  justify-center items-center rounded-lg shadow-md  flex-col ">
         <h2 className="text-lg font-semibold text-accent">
-          {getTotal().toFixed(2)}
+          Total Amount: Rs {getTotal().toFixed(2)}
         </h2>
-        <button className="bg-accent text-white px-4 py-0.5 rounded-lg">
-          placeholder
+        <input
+          type="text"
+          placeholder="Phone Number"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          className="w-[90%] h-8 border border-gray-300 rounded-md px-2 mt-1"
+        />
+        <input
+          type="text"
+          placeholder="Address"
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
+          className="w-[90%] h-8 border border-gray-300 rounded-md px-2 mt-1"
+        />
+        <button
+          onClick={placeOrder}
+          className="bg-accent text-white px-4 py-0.5 rounded-lg hover:cursor-pointer hover:text-black"
+        >
+          Place Order
         </button>
       </div>
       {cart.map((item, Index) => {
