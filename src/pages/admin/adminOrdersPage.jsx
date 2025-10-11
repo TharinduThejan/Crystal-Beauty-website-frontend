@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import Loading from "../../components/loading";
 import Modal from "react-modal";
+import { toast } from "react-hot-toast";
 
 Modal.setAppElement("#root");
 
@@ -84,13 +85,58 @@ export default function AdminOrdersPage() {
                     : "bg-gray-100 text-gray-700"
                 }`}
               >
-                {order.status}
+                {order.status.toUpperCase()}
               </span>
+              <select
+                defaultValue="pending"
+                onChange={async (e) => {
+                  const updatedValue = e.target.value;
+                  try {
+                    const token = localStorage.getItem("token");
+                    await axios.put(
+                      import.meta.env.VITE_BACKEND_URL +
+                        "/api/orders/" +
+                        order.orderId +
+                        "/" +
+                        updatedValue,
+                      {},
+                      {
+                        headers: { Authorization: "Bearer " + token },
+                      }
+                    );
+                    setIsLoading(true);
+                    const updatedOrders = { ...activeOrder };
+                    updatedOrders.status = updatedValue;
+                    setActiveOrder(updatedOrders);
+                    toast.success("Order status updated to " + updatedValue);
+
+                    // setActiveOrder((prev) =>
+                    //   prev ? { ...prev, status: updatedValue } : prev
+                    // );
+                    // setOrders((prev) =>
+                    //   prev.map((o) =>
+                    //     o.orderId === order.orderId
+                    //       ? { ...o, status: updatedValue }
+                    //       : o
+                    //   )
+                    // );
+                  } catch (err) {
+                    toast.error("Error updating order status");
+                    console.error(err);
+                    return;
+                  }
+                }}
+              >
+                <option value="pending">Pending</option>
+                <option value="completed">Completed</option>
+                <option value="canceled">Canceled</option>
+                <option value="returned">Returned</option>
+              </select>
             </p>
             <p>
               <span className="font-semibold">Total:</span>{" "}
               <span className="text-green-600 font-bold">
-                ${order.total.toFixed(2)}
+                LKR {order.total.toFixed(2)}
               </span>
             </p>
           </div>
@@ -149,7 +195,7 @@ export default function AdminOrdersPage() {
         onRequestClose={() => setIsModalOpen(false)}
         contentLabel="Order Details"
         className="bg-white p-6 rounded-lg shadow-lg mx-auto mt-6 max-w-6xl text-xs"
-        overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-start z-50"
+        overlayClassName="fixed inset-0 bg-[#00000050] flex justify-center items-start z-50"
       >
         <button
           onClick={() => setIsModalOpen(false)}
