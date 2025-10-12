@@ -22,7 +22,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/admin/*" element={<AdminPage />} />
-          {/* <Route path="/testing" element={<TestPage />} /> */}
+          <Route path="/testing" element={<TestPage />} />
           <Route path="/loading" element={<Loading />} />
           {/* //for all other wrong paths */}
         </Routes>
