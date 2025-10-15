@@ -4,13 +4,13 @@ export default function ImageSlider({ images }) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   return (
-    <div className="w-[500px] h-[600px] border-2 border-gray-300 rounded-2xl">
+    <div className="w-[90%] md:w-[500px] h-[600px] border-2 border-gray-300 rounded-2xl">
       <img
         className="w-full h-[500px] object-cover rounded-t-3xl"
         src={images?.[currentIndex]}
         alt="main"
       />
-      <div className="w-full h-[100px] flex justify-center items-center ">
+      <div className="w-full h-[100px] flex justify-center items-center overflow-y-hidden ">
         {images?.map((image, index) => {
           return (
             <img

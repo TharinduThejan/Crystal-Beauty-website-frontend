@@ -33,13 +33,23 @@ export default function ProductOverview() {
   return (
     <>
       {status == "success" && (
-        <div className=" flex w-full h-full">
-          <div className="w-[50%]  h-full flex justify-center items-center">
+        <div className=" flex w-full h-full flex-col md:flex-row md:max-h-full">
+          <h1 className="w-full  block md:hidden text-center my-8 text-4xl text-secondary font-semibold ">
+            {product.name}
+            {product.altNames.map((altName, index) => (
+              <span key={index} className="text-4xl text-gray-500">
+                {" "}
+                {" | " + altName}{" "}
+              </span>
+            ))}
+          </h1>
+
+          <div className="w-full md:w-[50%]  md:h-full flex justify-center items-center">
             <ImageSlider images={product.images} />
           </div>
-          <div className="flex justify-center items-center w-[50%]  h-full">
-            <div className="w-[500px] h-[600px] flex flex-col items-center bg-white p-8 rounded-3xl shadow-lg">
-              <h1 className="w-full text-center text-4xl text-secondary font-semibold ">
+          <div className="flex justify-center items-center w-full md:w-[50%] md: h-full">
+            <div className="w-full md:w-[500px] md:h-[600px] flex flex-col items-center bg-white p-8 rounded-3xl shadow-lg">
+              <h1 className="w-full hidden md:block text-center text-4xl text-secondary font-semibold ">
                 {product.name}
                 {product.altNames.map((altName, index) => (
                   <span key={index} className="text-4xl text-gray-500">
@@ -72,7 +82,7 @@ export default function ProductOverview() {
                   {product.price.toFixed(2)}
                 </span>
               )}
-              <div className="w-full flex justify-center items-center mt-4">
+              <div className="w-full gap-4 flex-col  md:flex-row flex justify-center items-center mt-4">
                 <button
                   onClick={() => {
                     // localStorage.removeItem("cart");
@@ -83,7 +93,7 @@ export default function ProductOverview() {
                     console.log(getCart());
                     toast.success("Product added to cart");
                   }}
-                  className="bg-accent text-white px-4 py-3 rounded-full text-lg font-semibold hover:bg-purple-700 transition duration-300 cursor-pointer"
+                  className="bg-accent justify-center items-center text-white px-4 py-3 rounded-full text-lg font-semibold hover:bg-purple-700 transition duration-300 cursor-pointer"
                 >
                   Add to Cart
                 </button>
@@ -104,7 +114,7 @@ export default function ProductOverview() {
                       },
                     });
                   }}
-                  className="bg-accent text-white px-6 py-3 rounded-full text-lg font-semibold hover:bg-gray-700 transition duration-300 ml-4 cursor-pointer"
+                  className="bg-accent text-white px-6 justify-center items-center py-3 rounded-full text-lg font-semibold hover:bg-gray-700 transition duration-300  cursor-pointer"
                 >
                   Buy Now
                 </button>
