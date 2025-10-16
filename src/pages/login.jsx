@@ -2,6 +2,8 @@ import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { GrGoogle } from "react-icons/gr";
+import { useGoogleLogin } from "@react-oauth/google";
 
 export default function Login() {
   //e-mail and password are dynamically changing values
@@ -9,9 +11,35 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
+  const googleLogin = useGoogleLogin({
+    onSuccess: (Response) => {
+      const accenssToken = Response.access_token;
+      axios
+        .post(import.meta.env.VITE_BACKEND_URL + "/api/users/login/google", {
+          accessToken: accenssToken,
+        })
+        .then((response) => {
+          console.log(response.data);
+          toast.success("Login Successful");
+          localStorage.setItem("token", response.data.token); //save data in local storage
+          if (response.data.role === "admin") {
+            navigate("/admin"); //if user===admin then navigate to admin
+          } else {
+            navigate("/"); //else navigate to home
+          }
+          // Handle successful login here
+        })
+        .catch((error) => {
+          console.error(error);
+          toast.error("Login Failed");
+        });
+    },
+  });
+
   async function handleLogin() {
     console.log("Email:", email);
     console.log("Password:", password);
+
     try {
       const response = await axios.post(
         import.meta.env.VITE_BACKEND_URL + "/api/users/login", //sent backend api URI to .env
@@ -47,12 +75,14 @@ export default function Login() {
             onChange={(e) => {
               setEmail(e.target.value);
             }}
+            placeholder="e-mail"
             value={email}
             className="w-[300px] h-[50px] border border-[#c3efe9] rounded-[20px] my-[20px] px-[10px]"
           />
 
           <input
             type="password"
+            placeholder="password"
             onChange={(e) => {
               setPassword(e.target.value);
             }}
@@ -65,6 +95,13 @@ export default function Login() {
             className="w-[300px] h-[50px] border border-white bg-[#c3efe9] text-black rounded-[20px] my-[20px] cursor-pointer hover:bg-[#b2e6e0] transition duration-300"
           >
             Login
+          </button>
+          <button
+            onClick={googleLogin}
+            className="w-[300px] h-[50px] border border-white bg-[#c3efe9] text-black rounded-[20px] my-[20px] cursor-pointer hover:bg-[#b2e6e0] transition duration-300 hover:cursor-pointer"
+          >
+            <GrGoogle className="inline mr-2 " onClick={googleLogin} /> Sign in
+            with Google
           </button>
         </div>
       </div>
