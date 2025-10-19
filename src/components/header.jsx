@@ -50,6 +50,12 @@ export default function Header() {
           >
             Contact
           </Link>
+          <Link
+            to="/search"
+            className="text-black font-medium px-4 py-2 hover:bg-white hover:text-emerald-600 transition duration-200"
+          >
+            Search
+          </Link>
         </nav>
       </div>
 
