@@ -18,7 +18,7 @@ export default function Header() {
       {/* Logo */}
       <img
         onClick={() => navigate("/")}
-        src="/logo.png"
+        src="https://wygdrdwatnbwuuuwglbc.supabase.co/storage/v1/object/public/product-images/logo.png"
         alt="Logo"
         className="h-20 object-cover cursor-pointer mb-2"
       />
