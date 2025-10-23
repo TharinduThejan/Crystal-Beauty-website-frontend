@@ -7,3 +7,8 @@
     --color-accent: #483AA0;
     --font-family: 'Poppins', sans-serif;
 }
+
+/* Global typography */
+body{
+    font-family: var(--font-family);
+}

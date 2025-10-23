@@ -6,6 +6,7 @@ import { GiHamburgerMenu } from "react-icons/gi";
 export default function Header() {
   const navigate = useNavigate();
   const [SideDrawerOpen, setSideDrawerOpen] = useState(false);
+  const token = localStorage.getItem("token");
 
   return (
     <header className="w-full shadow-lg flex items-center justify-center relative">
@@ -61,6 +62,24 @@ export default function Header() {
 
       {/* Desktop Cart Icon */}
       <div className="hidden md:flex w-[80px] items-center justify-center">
+        {token == null ? (
+          <Link
+            to="/login"
+            className="mr-4 text-black font-medium px-4 py-2 hover:bg-white hover:text-emerald-600 transition duration-200"
+          >
+            Login
+          </Link>
+        ) : (
+          <button
+            onClick={() => {
+              localStorage.removeItem("token");
+              navigate("/login");
+            }}
+            className="ml-10 mr-4 text-black font-medium px-4 py-2 hover:bg-white hover:text-emerald-600 transition duration-200 cursor-pointer"
+          >
+            Logout
+          </button>
+        )}
         <Link to="/cart" className="mr-4">
           <BsCart3 className="text-xl" />
         </Link>

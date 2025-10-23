@@ -48,7 +48,7 @@ export default function AdminPage() {
 
   function getClass(name) {
     if (path.includes(name)) {
-      return "bg-accent text-white block p-4";
+      return "bg-accent text-pink-500 block p-4";
     } else {
       return "text-accent block p-4";
     }
