@@ -1,33 +1,27 @@
 import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { GrGoogle } from "react-icons/gr";
 import { useGoogleLogin } from "@react-oauth/google";
 
 export default function Login() {
-  //e-mail and password are dynamically changing values
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
   const googleLogin = useGoogleLogin({
     onSuccess: (Response) => {
-      const accenssToken = Response.access_token;
+      const accessToken = Response.access_token;
       axios
         .post(import.meta.env.VITE_BACKEND_URL + "/api/users/login/google", {
-          accessToken: accenssToken,
+          accessToken,
         })
         .then((response) => {
-          console.log(response.data);
           toast.success("Login Successful");
-          localStorage.setItem("token", response.data.token); //save data in local storage
-          if (response.data.role === "admin") {
-            navigate("/admin"); //if user===admin then navigate to admin
-          } else {
-            navigate("/"); //else navigate to home
-          }
-          // Handle successful login here
+          localStorage.setItem("token", response.data.token);
+          if (response.data.role === "admin") navigate("/admin");
+          else navigate("/");
         })
         .catch((error) => {
           console.error(error);
@@ -37,72 +31,78 @@ export default function Login() {
   });
 
   async function handleLogin() {
-    console.log("Email:", email);
-    console.log("Password:", password);
-
     try {
       const response = await axios.post(
-        import.meta.env.VITE_BACKEND_URL + "/api/users/login", //sent backend api URI to .env
-        {
-          email,
-          password,
-        }
+        import.meta.env.VITE_BACKEND_URL + "/api/users/login",
+        { email, password }
       );
       toast.success("Login successful!");
-      console.log(response.data);
-
-      localStorage.setItem("token", response.data.token); //save data in local storage
-
-      if (response.data.role === "admin") {
-        // window.location.href = "/admin";
-        navigate("/admin"); //if user===admin then navigate to admin
-      } else {
-        // window.location.href = "/";
-        navigate("/"); //else navigate to home
-      }
+      localStorage.setItem("token", response.data.token);
+      if (response.data.role === "admin") navigate("/admin");
+      else navigate("/");
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "Login failed");
     }
   }
 
   return (
-    <div className="h-screen w-full flex  items-center justify-center bg-[url('/login.jpg')] bg-center bg-cover">
-      <div className="w-[50%] h-full "></div>
+    <div className="h-screen w-full flex items-center justify-center bg-[url('/login.jpg')] bg-center bg-cover">
+      <div className="w-[50%] h-full"></div>
 
-      <div className="w-[50%] h-full  justify-center items-center flex">
-        <div className="w-[500px] h-[600px] backdrop-blur-md rounded-[20px] shadow-xl flex flex-col justify-center items-center ">
+      <div className="w-[50%] h-full flex justify-center items-center">
+        <div className="w-[500px] h-[600px] backdrop-blur-md rounded-[20px] shadow-xl flex flex-col justify-center items-center px-6">
+          <h1 className="text-3xl font-semibold mb-8 text-black">Login</h1>
+
           <input
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
-            placeholder="e-mail"
+            type="email"
+            placeholder="Email"
+            onChange={(e) => setEmail(e.target.value)}
             value={email}
-            className="w-[300px] h-[50px] border border-[#c3efe9] rounded-[20px] my-[20px] px-[10px]"
+            className="w-[300px] h-[50px] border border-[#c3efe9] rounded-[20px] my-[10px] px-[10px] outline-none bg-transparent text-gray-800 placeholder-gray-800"
           />
 
           <input
             type="password"
-            placeholder="password"
-            onChange={(e) => {
-              setPassword(e.target.value);
-            }}
+            placeholder="Password"
+            onChange={(e) => setPassword(e.target.value)}
             value={password}
-            className="w-[300px] h-[50px] border border-[#c3efe9] rounded-[20px] my-[20px] px-[10px]"
+            className="w-[300px] h-[50px] border border-[#c3efe9] rounded-[20px] my-[10px] px-[10px] outline-none bg-transparent text-gray-800 placeholder-gray-800"
           />
+
+          {/* Forgot Password Link */}
+          <div className="w-[300px] flex justify-end text-sm text-gray-500 mb-2">
+            <Link
+              to="/forget"
+              className="hover:text-[#c3efe9] transition duration-300"
+            >
+              Forgot Password?
+            </Link>
+          </div>
 
           <button
             onClick={handleLogin}
-            className="w-[300px] h-[50px] border border-white bg-[#c3efe9] text-black rounded-[20px] my-[20px] cursor-pointer hover:bg-[#b2e6e0] transition duration-300"
+            className="w-[300px] h-[50px] bg-[#ea7d7d] text-black rounded-[20px] my-[10px] hover:bg-[#b2e6e0] transition duration-300"
           >
             Login
           </button>
+
           <button
             onClick={googleLogin}
-            className="w-[300px] h-[50px] border border-white bg-[#c3efe9] text-black rounded-[20px] my-[20px] cursor-pointer hover:bg-[#b2e6e0] transition duration-300 hover:cursor-pointer"
+            className="w-[300px] h-[50px] bg-[#ea7d7d] text-black rounded-[20px] my-[10px] flex justify-center items-center gap-2 hover:bg-[#b2e6e0] transition duration-300"
           >
-            <GrGoogle className="inline mr-2 " onClick={googleLogin} /> Sign in
-            with Google
+            <GrGoogle /> Sign in with Google
           </button>
+
+          {/* Register Link */}
+          <p className="text-gray-400 mt-6">
+            Don’t have an account?{" "}
+            <Link
+              to="/register"
+              className="text-[#6d8380] font-medium hover:underline"
+            >
+              Register
+            </Link>
+          </p>
         </div>
       </div>
     </div>
